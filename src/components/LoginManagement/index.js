@@ -4,20 +4,12 @@ import { withFirebase } from '../Firebase';
 
 const SIGN_IN_METHODS = [
   {
-    id: 'password',
-    provider: null,
-  },
-  {
     id: 'google.com',
     provider: 'googleProvider',
   },
   {
     id: 'facebook.com',
     provider: 'facebookProvider',
-  },
-  {
-    id: 'twitter.com',
-    provider: 'twitterProvider',
   },
 ];
 
@@ -99,15 +91,7 @@ class LoginManagement extends Component {
 
             return (
               <li key={signInMethod.id}>
-                {signInMethod.id === 'password' ? (
-                  <DefaultLoginToggle
-                    onlyOneLeft={onlyOneLeft}
-                    isEnabled={isEnabled}
-                    signInMethod={signInMethod}
-                    onLink={this.onDefaultLoginLink}
-                    onUnlink={this.onUnlink}
-                  />
-                ) : (
+                {(
                   <SocialLoginToggle
                     onlyOneLeft={onlyOneLeft}
                     isEnabled={isEnabled}
@@ -149,69 +133,5 @@ const SocialLoginToggle = ({
       Link {signInMethod.id}
     </button>
   );
-
-class DefaultLoginToggle extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { passwordOne: '', passwordTwo: '' };
-  }
-
-  onSubmit = event => {
-    event.preventDefault();
-
-    this.props.onLink(this.state.passwordOne);
-    this.setState({ passwordOne: '', passwordTwo: '' });
-  };
-
-  onChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
-
-  render() {
-    const {
-      onlyOneLeft,
-      isEnabled,
-      signInMethod,
-      onUnlink,
-    } = this.props;
-
-    const { passwordOne, passwordTwo } = this.state;
-
-    const isInvalid =
-      passwordOne !== passwordTwo || passwordOne === '';
-
-    return isEnabled ? (
-      <button
-        type="button"
-        onClick={() => onUnlink(signInMethod.id)}
-        disabled={onlyOneLeft}
-      >
-        Deactivate {signInMethod.id}
-      </button>
-    ) : (
-      <form onSubmit={this.onSubmit}>
-        <input
-          name="passwordOne"
-          value={passwordOne}
-          onChange={this.onChange}
-          type="password"
-          placeholder="New Password"
-        />
-        <input
-          name="passwordTwo"
-          value={passwordTwo}
-          onChange={this.onChange}
-          type="password"
-          placeholder="Confirm New Password"
-        />
-
-        <button disabled={isInvalid} type="submit">
-          Link {signInMethod.id}
-        </button>
-      </form>
-    );
-  }
-}
 
 export default withFirebase(LoginManagement);
