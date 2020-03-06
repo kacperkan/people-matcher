@@ -65,7 +65,7 @@ class Firebase {
         this.user(authUser.uid)
           .once('value')
           .then(snapshot => {
-            const dbUser = snapshot.val();
+            const dbUser = snapshot.val() || {};
 
             // default empty roles
             if (!dbUser.roles) {
@@ -78,6 +78,7 @@ class Firebase {
               email: authUser.email,
               emailVerified: authUser.emailVerified,
               providerData: authUser.providerData,
+              photoURL: authUser.photoURL,
               ...dbUser,
             };
 
@@ -99,6 +100,12 @@ class Firebase {
   message = uid => this.db.ref(`messages/${uid}`);
 
   messages = () => this.db.ref('messages');
+
+  // *** Interest API ***
+
+  interest = uid => this.db.ref(`interests/${uid}`);
+
+  interests = () => this.db.ref('interests');
 }
 
 let firebase;
