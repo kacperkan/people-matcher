@@ -3,7 +3,6 @@ import { useList, useObject } from 'react-firebase-hooks/database';
 import {firebase} from 'gatsby-theme-firebase';
 
 import Layout from '../components/layout';
-import Image from '../components/image';
 import SEO from '../components/seo';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -32,15 +31,10 @@ const IndexPage = ({ location }) => {
       <Grid container spacing={3} justify="center">
         <Grid item xs={2}>
           <div style={{ maxWidth: `100px`, marginBottom: `1.45rem` }}>
-            <Image />
           </div>
         </Grid>
         <Grid item xs={8}>
-          <h1>Gatsby Material UI Starter</h1>
-          <h5>
-            A responsive, minimalist Gatsby starter based on the
-            world's most popular React UI framework.
-          </h5>
+          <h1>Test</h1>
         </Grid>
       </Grid>
       <Divider />
