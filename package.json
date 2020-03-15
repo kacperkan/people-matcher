@@ -1,21 +1,51 @@
 {
-  "name": "react-gastby-firebase-authentication",
-  "description": "Gatsby hello world starter",
-  "scripts": {
-    "develop": "gatsby develop",
-    "start": "npm run develop",
-    "build": "gatsby build",
-    "serve": "gatsby serve"
-  },
+  "name": "gatsby-starter-material-ui",
+  "private": true,
+  "description": "A simple starter to get up and developing quickly with Gatsby and Material UI",
+  "version": "0.1.0",
+  "author": "Dominic Abela <djmabela@gmail.com>",
   "dependencies": {
-    "core-js": "^3.6.4",
-    "firebase": "^7.10.0",
-    "gatsby": "^2.19.31",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "recompose": "^0.30.0"
+    "@material-ui/core": "^4.9.5",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/styles": "^4.9.0",
+    "firebase": "^7.11.0",
+    "gatsby": "^2.19.43",
+    "gatsby-image": "^2.2.43",
+    "gatsby-plugin-manifest": "^2.2.47",
+    "gatsby-plugin-material-ui": "^2.1.6",
+    "gatsby-plugin-offline": "^2.2.10",
+    "gatsby-plugin-react-helmet": "^3.1.23",
+    "gatsby-plugin-sharp": "^2.4.12",
+    "gatsby-source-filesystem": "^2.1.55",
+    "gatsby-theme-firebase": "^1.0.8",
+    "gatsby-transformer-sharp": "^2.3.18",
+    "prop-types": "^15.7.2",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "react-helmet": "^5.2.1",
+    "typeface-roboto": "0.0.54"
   },
   "devDependencies": {
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "prettier": "^1.19.1"
+  },
+  "keywords": [
+    "gatsby"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "gatsby build",
+    "develop": "gatsby develop",
+    "format": "prettier --write src/**/*.{js,jsx}",
+    "start": "npm run develop",
+    "serve": "gatsby serve",
+    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dominicabela/gatsby-starter-material-ui"
+  },
+  "bugs": {
+    "url": "https://github.com/dominicabela/gatsby-starter-material-ui/issues"
   }
 }
