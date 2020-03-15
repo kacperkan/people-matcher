@@ -14,7 +14,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Header from './header';
 import './layout.css';
-import Redirect from './redirect';
 import SignIn from './sing-in';
 
 function Copyright() {
@@ -29,11 +28,8 @@ function Copyright() {
   );
 }
 
-const loginLocation = '/';
-
-const Layout = ({ location, children }) => {
-  const { isLoading, isLoggedIn, profile } = useAuth();
-  console.log(isLoading, isLoggedIn);
+const Layout = ({ children }) => {
+  const { isLoading, isLoggedIn } = useAuth();
   return (
     <StaticQuery
       query={graphql`

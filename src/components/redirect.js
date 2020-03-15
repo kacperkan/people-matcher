@@ -1,8 +1,9 @@
 import React, {useEffect} from 'react'
+import { navigate } from "gatsby";
 
 const Redirect = ({ path }) => {
   useEffect(() => {
-    window.location.href = path
+    navigate(path)
   }, []);
 
   return (

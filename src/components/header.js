@@ -140,10 +140,10 @@ const Header = ({ siteTitle }) => {
           <Typography variant="h6" color="inherit">
             {siteTitle}
           </Typography>
-          <Typography variant="h7" color="inherit" className={classes.userAvatar}>
+          <div className={classes.userAvatar}>
             <span className={classes.userName}>{profile?.displayName + ' '}</span>
             <Avatar alt={profile?.displayName} src={profile?.photoURL} />
-          </Typography>
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer
