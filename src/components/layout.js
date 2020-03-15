@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import { StaticQuery, graphql } from 'gatsby';
 import { useAuth } from 'gatsby-theme-firebase';
 import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Header from './header';
@@ -23,7 +24,9 @@ function Copyright() {
       {new Date().getFullYear()}
       {' Kemal Erdem.'} Built with
       {` `}
-      <a href="https://www.gatsbyjs.org">Gatsby</a>
+      <Link color="inherit" href="https://www.gatsbyjs.org">
+        Gatsby
+      </Link>
     </Typography>
   );
 }
@@ -56,9 +59,9 @@ const Layout = ({ children }) => {
             >
               <CircularProgress size={100} />
             </div>
-          ) : isLoggedIn ? (
+          ) : (
             <React.Fragment>
-              <Header siteTitle={data.site.siteMetadata.title} />
+              {isLoggedIn && <Header siteTitle={data.site.siteMetadata.title} />}
               <div
                 style={{
                   margin: `0 auto`,
@@ -67,24 +70,12 @@ const Layout = ({ children }) => {
                   paddingTop: 100,
                 }}
               >
-                <main style={{ flex: 1 }}>{children}</main>
+                <main style={{ flex: 1 }}>
+                  {isLoggedIn ? children : <SignIn />}
+                </main>
                 <Copyright />
               </div>
             </React.Fragment>
-          ) : (
-            <div
-              style={{
-                margin: `0 auto`,
-                maxWidth: 960,
-                padding: `0px 1.0875rem 1.45rem`,
-                paddingTop: 100,
-              }}
-            >
-              <main style={{ flex: 1 }}>
-                <SignIn />
-              </main>
-              <Copyright />
-            </div>
           )}
         </div>
       )}

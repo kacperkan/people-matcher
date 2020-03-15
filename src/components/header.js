@@ -182,6 +182,7 @@ const Header = ({ siteTitle }) => {
               <ListItemText>Profile</ListItemText>
             </ListItem>
           </Link>
+          <Divider />
           <ListItem button onClick={signOut}>
             <ListItemIcon>
               <MeetingRoom />
