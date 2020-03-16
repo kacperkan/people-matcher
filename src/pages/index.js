@@ -97,8 +97,6 @@ const IndexPage = ({ location }) => {
         }, [])
       : [];
 
-  console.log('node and edges', nodes, edges);
-
   const graph = {
     nodes: nodes,
     edges: edges,

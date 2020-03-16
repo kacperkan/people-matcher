@@ -8,6 +8,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Chip from '@material-ui/core/Chip';
+import TableContainer from '@material-ui/core/TableContainer';
+import TablePagination from '@material-ui/core/TablePagination';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,11 +20,11 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
   },
   connectionsColumn: {
-    width: '140px'
+    width: '140px',
   },
   nameColumn: {
-    width: '280px'
-  }
+    width: '280px',
+  },
 }));
 
 const generateRowsFromEdges = (edges, nodes) => {
@@ -36,19 +38,24 @@ const generateRowsFromEdges = (edges, nodes) => {
         toUser.tags.some(userTag => userTag.uid === nodeTag.uid),
       );
 
-      const targetUserIndex = acc.findIndex(element => element.id === `${nodeFromId}/${nodeToId}`);
-      if(targetUserIndex !== -1) {
+      const targetUserIndex = acc.findIndex(
+        element => element.id === `${nodeFromId}/${nodeToId}`,
+      );
+      if (targetUserIndex !== -1) {
         acc[targetUserIndex] = {
           tags,
           id: `${nodeFromId}/${nodeToId}`,
-          name: `${fromUser.username} - ${toUser.username}`
+          name: `${fromUser.username} - ${toUser.username}`,
         };
       } else {
-        acc = [...acc, {
-          tags,
-          id: `${nodeFromId}/${nodeToId}`,
-          name: `${fromUser.username} - ${toUser.username}`
-        }]
+        acc = [
+          ...acc,
+          {
+            tags,
+            id: `${nodeFromId}/${nodeToId}`,
+            name: `${fromUser.username} - ${toUser.username}`,
+          },
+        ];
       }
       return acc;
     }, []);
@@ -68,30 +75,47 @@ const generateRowsFromNodes = (node, edges, nodes) => {
         targetUser.tags.some(userTag => userTag.uid === nodeTag.uid),
       );
 
-      const targetUserIndex = acc.findIndex(element => element.id === targetUser.id);
-      if(targetUserIndex !== -1) {
+      const targetUserIndex = acc.findIndex(
+        element => element.id === targetUser.id,
+      );
+      if (targetUserIndex !== -1) {
         acc[targetUserIndex] = {
           tags,
           id: targetUser.id,
-          name: targetUser.username
+          name: targetUser.username,
         };
       } else {
-        acc = [...acc, {
-          tags,
-          id: targetUser.id,
-          name: targetUser.username
-        }]
+        acc = [
+          ...acc,
+          {
+            tags,
+            id: targetUser.id,
+            name: targetUser.username,
+          },
+        ];
       }
       return acc;
     }, []);
 };
 
-const sortByNumOfConnections = (nodeA, nodeB) => nodeA.tags.length - nodeB.tags.length;
+const sortByNumOfConnections = (nodeA, nodeB) =>
+  nodeA.tags.length - nodeB.tags.length;
 
 const UsersConnections = ({ selectedNodes, selectedEdges, nodes }) => {
   const classes = useStyles();
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const rows =
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = event => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  let rows =
     selectedNodes.length > 0
       ? generateRowsFromNodes(selectedNodes[0], selectedEdges, nodes)
       : generateRowsFromEdges(selectedEdges, nodes);
@@ -101,25 +125,50 @@ const UsersConnections = ({ selectedNodes, selectedEdges, nodes }) => {
   return (
     <Container className={classes.root}>
       <Paper>
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell className={classes.connectionsColumn} align='center'>Connections</TableCell>
-              <TableCell className={classes.nameColumn} align='center'>Name</TableCell>
-              <TableCell>Tags</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map(row => (
-              <TableRow key={row.id}>
-                <TableCell className={classes.connectionsColumn} align='center'>{row.tags.length}</TableCell>
-                <TableCell className={classes.nameColumn} align='center'>{row.name}</TableCell>
-                <TableCell>{row.tags.map(tag => (
-                  <Chip key={tag.uid} label={tag.tagName} />))}</TableCell>
+        <TableContainer className={classes.container}>
+          <Table stickyHeader  size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell className={classes.connectionsColumn} align="center">
+                  Connections
+                </TableCell>
+                <TableCell className={classes.nameColumn} align="center">
+                  Name
+                </TableCell>
+                <TableCell>Tags</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHead>
+            <TableBody>
+              {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => (
+                <TableRow key={row.id}>
+                  <TableCell
+                    className={classes.connectionsColumn}
+                    align="center"
+                  >
+                    {row.tags.length}
+                  </TableCell>
+                  <TableCell className={classes.nameColumn} align="center">
+                    {row.name}
+                  </TableCell>
+                  <TableCell>
+                    {row.tags.map(tag => (
+                      <Chip key={tag.uid} label={tag.tagName} />
+                    ))}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[10]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onChangePage={handleChangePage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+        />
       </Paper>
     </Container>
   );
