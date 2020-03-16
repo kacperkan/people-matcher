@@ -36,12 +36,22 @@ const generateRowsFromEdges = (edges, nodes) => {
         toUser.tags.some(userTag => userTag.uid === nodeTag.uid),
       );
 
-      acc[`${nodeFromId}/${nodeToId}`] = {
-        tags,
-        name: `${fromUser.username} - ${toUser.username}`
-      };
+      const targetUserIndex = acc.findIndex(element => element.id === `${nodeFromId}/${nodeToId}`);
+      if(targetUserIndex !== -1) {
+        acc[targetUserIndex] = {
+          tags,
+          id: `${nodeFromId}/${nodeToId}`,
+          name: `${fromUser.username} - ${toUser.username}`
+        };
+      } else {
+        acc = [...acc, {
+          tags,
+          id: `${nodeFromId}/${nodeToId}`,
+          name: `${fromUser.username} - ${toUser.username}`
+        }]
+      }
       return acc;
-    }, {});
+    }, []);
 };
 
 const generateRowsFromNodes = (node, edges, nodes) => {
@@ -58,26 +68,35 @@ const generateRowsFromNodes = (node, edges, nodes) => {
         targetUser.tags.some(userTag => userTag.uid === nodeTag.uid),
       );
 
-      acc[targetUser.id] = {
-        tags,
-        name: targetUser.username
-      };
+      const targetUserIndex = acc.findIndex(element => element.id === targetUser.id);
+      if(targetUserIndex !== -1) {
+        acc[targetUserIndex] = {
+          tags,
+          id: targetUser.id,
+          name: targetUser.username
+        };
+      } else {
+        acc = [...acc, {
+          tags,
+          id: targetUser.id,
+          name: targetUser.username
+        }]
+      }
       return acc;
-    }, {});
+    }, []);
 };
+
+const sortByNumOfConnections = (nodeA, nodeB) => nodeA.tags.length - nodeB.tags.length;
 
 const UsersConnections = ({ selectedNodes, selectedEdges, nodes }) => {
   const classes = useStyles();
-  console.log(selectedNodes);
-  console.log(selectedEdges);
-  console.log('nodes', nodes);
 
   const rows =
     selectedNodes.length > 0
       ? generateRowsFromNodes(selectedNodes[0], selectedEdges, nodes)
       : generateRowsFromEdges(selectedEdges, nodes);
 
-  console.log(rows);
+  rows.sort(sortByNumOfConnections);
 
   return (
     <Container className={classes.root}>
@@ -91,12 +110,12 @@ const UsersConnections = ({ selectedNodes, selectedEdges, nodes }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {Object.keys(rows).map(rowId => (
-              <TableRow key={rowId}>
-                <TableCell className={classes.connectionsColumn} align='center'>{rows[rowId].tags.length}</TableCell>
-                <TableCell className={classes.nameColumn} align='center'>{rows[rowId].name}</TableCell>
-                <TableCell>{rows[rowId].tags.map(tag => (
-                  <Chip label={tag.tagName} />))}</TableCell>
+            {rows.map(row => (
+              <TableRow key={row.id}>
+                <TableCell className={classes.connectionsColumn} align='center'>{row.tags.length}</TableCell>
+                <TableCell className={classes.nameColumn} align='center'>{row.name}</TableCell>
+                <TableCell>{row.tags.map(tag => (
+                  <Chip key={tag.uid} label={tag.tagName} />))}</TableCell>
               </TableRow>
             ))}
           </TableBody>
