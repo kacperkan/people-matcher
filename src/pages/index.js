@@ -22,8 +22,8 @@ const useStyles = makeStyles(theme => ({
 }));
 const options = {
   nodes: {
-    borderWidth: 2,
-    imagePadding: 5,
+    borderWidth: 6,
+    size: 30
   },
   layout: {
     hierarchical: false,
@@ -34,7 +34,13 @@ const options = {
         enabled: false,
       },
     },
-    color: '#000000',
+
+    scaling: {
+      customScalingFunction: function(min, max, total, value) {
+        return value / total;
+      },
+    },
+    color: '#5B72FF',
   },
 };
 
@@ -62,8 +68,7 @@ const IndexPage = ({ location }) => {
             id: userKey,
             tags: userData[userKey].tags || [],
             shape: 'circularImage',
-            image:
-              'https://raw.githubusercontent.com/google/material-design-icons/master/social/2x_web/ic_person_outline_white_48dp.png',
+            image: userData[userKey].photoURL || 'https://raw.githubusercontent.com/google/material-design-icons/master/social/2x_web/ic_person_outline_white_48dp.png',
             brokenImage:
               'https://raw.githubusercontent.com/google/material-design-icons/master/social/2x_web/ic_person_outline_white_48dp.png',
           };
