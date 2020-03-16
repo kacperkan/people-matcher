@@ -28,20 +28,23 @@ const useStyles = makeStyles(theme => ({
   tag: {
     position: 'relative',
     margin: '3px',
-    fontSize: '13px',
-    border: '1px dashed #cccccc',
+    fontSize: '16px',
+    border: '2px dashed #cccccc',
     borderRadius: '4px',
-    padding: '0 8px',
+    padding: theme.spacing(1),
     lineHeight: '30px',
     color: '#666666',
     background: 'rgba(255, 255, 255, 0.7)',
+  },
+  tagSelected: {
+    border: '2px dashed #3b9de9;',
   },
   deleteBtn: {
     position: 'absolute',
     top: '-1px',
     right: '-1px',
-    width: '16px',
-    height: '16px',
+    width: '20px',
+    height: '20px',
     cursor: 'pointer',
     userDrag: 'none',
     userSelect: 'none',
@@ -89,7 +92,7 @@ const ProfilePage = ({ location }) => {
   return (
     <Layout location={location}>
       <SEO title="Page two" />
-      <h1>Components</h1>
+      <h1>Select your interests</h1>
       <Grid container spacing={3}>
         <Grid item xs={6}>
           <Paper className={classes.paper}>
@@ -134,9 +137,10 @@ const ProfilePage = ({ location }) => {
               className={classes.dragableBox}
               tags={rightTags}
               render={({ tag }) => (
-                <div className={classes.tag}>
+                <div className={classes.tag + ' ' + classes.tagSelected}>
                   <RemoveIcon
-                    className={classes.delete}
+                    color={'secondary'}
+                    className={classes.deleteBtn}
                     onClick={() => handleClickDelete(tag)}
                   />
                   {tag.content}
