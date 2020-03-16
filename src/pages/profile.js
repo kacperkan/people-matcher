@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useObject } from 'react-firebase-hooks/database';
+import React, { useEffect, useState } from 'react';
+import { useObject, useListVals } from 'react-firebase-hooks/database';
 import { firebase, useAuth } from 'gatsby-theme-firebase';
 import { DraggableAreasGroup } from 'react-draggable-tags';
 import Grid from '@material-ui/core/Grid';
@@ -8,6 +8,7 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import { v4 as uuidv4 } from 'uuid';
 
 import Layout from '../components/layout';
 import SEO from '../components/seo';
@@ -51,37 +52,57 @@ const useStyles = makeStyles(theme => ({
   },
   dragableBox: {
     minHeight: '100px',
-    background: 'rgba(0, 0, 0, 0.05)'
+    background: 'rgba(0, 0, 0, 0.05)',
   },
 }));
 
 const ProfilePage = ({ location }) => {
   const classes = useStyles();
-  const [newTagName, setNewTagName] = useState('');
-  const [leftTags, setLeftTags] = useState([
-    {
-      id: 'apple',
-      content: 'apple',
-    },
-  ]);
-  const [rightTags, setRightTags] = useState([
-    {
-      id: 'tomato',
-      content: 'tomato',
-    },
-  ]);
   const { isLoading, profile } = useAuth();
-  const [data, loading, error] = useObject(
+  const [user, loadingUser, errorUser] = useObject(
     firebase.database().ref(`/users/${profile?.uid}`),
   );
+  const [tags, loadingTags, error] = useListVals(
+    firebase.database().ref(`/tags`),
+  );
+  const [newTagName, setNewTagName] = useState('');
+  const userData = user?.val();
+
+  const userTags = userData?.tags || [];
+
+  const leftTags = tags.filter(tag => !userTags.some(userTag => userTag.uid === tag.uid));
+
+  const updateUserTags = tags => {
+    const updates = {
+      [`/users/${profile?.uid}/tags`]: tags,
+    };
+    firebase
+      .database()
+      .ref()
+      .update(updates);
+  };
 
   const handleClickDelete = tag => {
-    setRightTags(rightTags.filter(item => item.id !== tag.id));
-    setLeftTags([...leftTags, tag]);
+    updateUserTags(userTags.filter(item => item.uid !== tag.uid));
   };
 
   const handleAddTag = () => {
-    setLeftTags([...leftTags, { id: Math.random(), content: newTagName }]);
+    const newId = uuidv4();
+    let newPostKey = firebase
+      .database()
+      .ref()
+      .child('tags')
+      .push().key;
+    const updates = {
+      [`/tags/${newPostKey}`]: {
+        uid: newId,
+        tagName: newTagName,
+      },
+    };
+    firebase
+      .database()
+      .ref()
+      .update(updates);
     setNewTagName('');
   };
 
@@ -100,11 +121,8 @@ const ProfilePage = ({ location }) => {
               className={classes.dragableBox}
               tags={leftTags}
               render={({ tag }) => (
-                <div className={classes.tag}>{tag.content}</div>
+                <div className={classes.tag}>{tag.tagName}</div>
               )}
-              onChange={leftTags => {
-                setLeftTags(leftTags);
-              }}
             />
             <Grid container justify="center" alignItems="flex-end">
               <Grid item xs={9}>
@@ -122,6 +140,7 @@ const ProfilePage = ({ location }) => {
                 <Button
                   variant="contained"
                   color="primary"
+                  disabled={newTagName.length < 1}
                   onClick={handleAddTag}
                   className={classes.button}
                 >
@@ -135,7 +154,7 @@ const ProfilePage = ({ location }) => {
           <Paper className={classes.paper}>
             <DraggableArea2
               className={classes.dragableBox}
-              tags={rightTags}
+              tags={userTags}
               render={({ tag }) => (
                 <div className={classes.tag + ' ' + classes.tagSelected}>
                   <RemoveIcon
@@ -143,11 +162,11 @@ const ProfilePage = ({ location }) => {
                     className={classes.deleteBtn}
                     onClick={() => handleClickDelete(tag)}
                   />
-                  {tag.content}
+                  {tag.tagName}
                 </div>
               )}
               onChange={rightTags => {
-                setRightTags(rightTags);
+                updateUserTags(rightTags);
               }}
             />
           </Paper>
