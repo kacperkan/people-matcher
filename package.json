@@ -24,8 +24,8 @@
     "react-dom": "^16.13.0",
     "react-draggable-tags": "^0.4.1-beta.1",
     "react-firebase-hooks": "^2.1.1",
+    "react-graph-vis": "^1.0.5",
     "react-helmet": "^5.2.1",
-    "react-vis": "^1.11.7",
     "typeface-roboto": "0.0.54",
     "uuid": "^7.0.2"
   },

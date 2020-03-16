@@ -100,7 +100,6 @@ const useStyles = makeStyles(theme => ({
 const Header = ({ siteTitle }) => {
   const classes = useStyles();
   const { profile } = useAuth();
-  console.log(profile)
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
