@@ -70,7 +70,9 @@ const ProfilePage = ({ location }) => {
 
   const userTags = userData?.tags || [];
 
-  const leftTags = tags.filter(tag => !userTags.some(userTag => userTag.uid === tag.uid));
+  const leftTags = tags.filter(
+    tag => !userTags.some(userTag => userTag.uid === tag.uid),
+  );
 
   const updateUserTags = tags => {
     const updates = {
