@@ -1,5 +1,5 @@
 import React from 'react';
-import { SocialLogins } from 'gatsby-theme-firebase';
+import { firebase, SocialLogins } from 'gatsby-theme-firebase';
 
 import SEO from '../components/seo';
 
@@ -55,7 +55,40 @@ const SignIn = () => {
             <SocialLogins
               className={classes.socialLogin}
               onSuccess={user => {
-                console.log(user, '/profile');
+                firebase
+                  .database()
+                  .ref(`/users/${user.user.uid}`)
+                  .once('value')
+                  .then(function(snapshot) {
+                    const userData = snapshot.val();
+                    if (!userData) {
+                      //create new user
+                      firebase
+                        .database()
+                        .ref(`/users/${user.user.uid}`)
+                        .set({
+                          username: user.user.displayName,
+                          email: user.user.email,
+                          photoUrl: user.user.photoURL,
+                          tags: [],
+                        });
+                    } else {
+                      //update existing use
+                      firebase
+                        .database()
+                        .ref(`/users/${user.user.uid}/username`)
+                        .set(user.user.displayName);
+                      firebase
+                        .database()
+                        .ref(`/users/${user.user.uid}/email`)
+                        .set(user.user.email);
+                      firebase
+                        .database()
+                        .ref(`/users/${user.user.uid}/photoURL`)
+                        .set(user.user.photoURL);
+                    }
+                    window.location.href = '/profile';
+                  });
               }}
             />
           </form>

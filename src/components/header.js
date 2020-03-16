@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    background: 'linear-gradient(to right,  #663399, #5B72FF)',
+    background: 'linear-gradient(to right, #663399, #5B72FF)',
   },
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
@@ -114,6 +114,7 @@ const Header = ({ siteTitle }) => {
 
   function signOut() {
     auth.signOut();
+    window.location.href = '/';
   }
 
   return (

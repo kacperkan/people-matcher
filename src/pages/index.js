@@ -34,7 +34,6 @@ const options = {
         enabled: false,
       },
     },
-
     scaling: {
       customScalingFunction: function(min, max, total, value) {
         return value / total;

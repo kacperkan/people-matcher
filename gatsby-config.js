@@ -42,7 +42,7 @@ module.exports = {
           appId: process.env.GATSBY_FIREBASE_APP_ID,
         },
         loginRedirectPath: "/home",
-        socialLogins: ["google", "facebook"],
+        socialLogins: ["google"],
       },
     },
     {
