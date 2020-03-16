@@ -19,7 +19,7 @@ import SignIn from './sing-in';
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
+    <Typography variant="body2" color="textSecondary" align="center" style={{bottom: 0, position: 'absolute', width: '100%'}}>
       {'Copyright © '}
       {new Date().getFullYear()}
       {' Kemal Erdem.'} Built with
@@ -66,6 +66,8 @@ const Layout = ({ children }) => {
                 style={{
                   margin: `0 auto`,
                   maxWidth: 960,
+                  position: 'relative',
+                  height: '100vh',
                   padding: `0px 1.0875rem 1.45rem`,
                   paddingTop: 100,
                 }}
