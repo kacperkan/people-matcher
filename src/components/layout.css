@@ -627,3 +627,6 @@ pre tt:after {
     font-size: 100%;
   }
 }
+div.vis-network {
+  outline: none;
+}
