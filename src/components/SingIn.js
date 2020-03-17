@@ -48,7 +48,7 @@ const SignIn = () => {
     signin().then(user => {
       firebase
         .database()
-        .ref(`/users/${user.user.uid}`)
+        .ref(`/users/${user.uid}`)
         .once("value")
         .then(function(snapshot) {
           const userData = snapshot.val();
@@ -56,27 +56,27 @@ const SignIn = () => {
             //create new user
             firebase
               .database()
-              .ref(`/users/${user.user.uid}`)
+              .ref(`/users/${user.uid}`)
               .set({
-                username: user.user.displayName,
-                email: user.user.email,
-                photoUrl: user.user.photoURL,
+                username: user.displayName,
+                email: user.email,
+                photoUrl: user.photoURL,
                 tags: []
               });
           } else {
             //update existing use
             firebase
               .database()
-              .ref(`/users/${user.user.uid}/username`)
-              .set(user.user.displayName);
+              .ref(`/users/${user.uid}/username`)
+              .set(user.displayName);
             firebase
               .database()
-              .ref(`/users/${user.user.uid}/email`)
-              .set(user.user.email);
+              .ref(`/users/${user.uid}/email`)
+              .set(user.email);
             firebase
               .database()
-              .ref(`/users/${user.user.uid}/photoURL`)
-              .set(user.user.photoURL);
+              .ref(`/users/${user.uid}/photoURL`)
+              .set(user.photoURL);
           }
         });
     });
