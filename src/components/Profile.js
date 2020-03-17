@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { useObject, useListVals } from 'react-firebase-hooks/database';
-import { firebase, useAuth } from 'gatsby-theme-firebase';
-import { DraggableAreasGroup } from 'react-draggable-tags';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import RemoveIcon from '@material-ui/icons/Remove';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
-import { v4 as uuidv4 } from 'uuid';
+import React, { useState } from "react";
+import { useObject, useListVals } from "react-firebase-hooks/database";
+import firebase from "firebase";
+import { DraggableAreasGroup } from "react-draggable-tags";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import RemoveIcon from "@material-ui/icons/Remove";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import { makeStyles } from "@material-ui/core/styles";
+import { v4 as uuidv4 } from "uuid";
+import { useAuth } from "../hooks/use-auth";
 
-import Layout from '../components/layout';
-import SEO from '../components/seo';
+import SEO from "../components/Seo";
 
 const group = new DraggableAreasGroup();
 const DraggableArea1 = group.addArea();
@@ -19,64 +19,64 @@ const DraggableArea2 = group.addArea();
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   paper: {
     padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
+    textAlign: "center",
+    color: theme.palette.text.secondary
   },
   tag: {
-    position: 'relative',
-    margin: '3px',
-    fontSize: '16px',
-    border: '2px dashed #cccccc',
-    borderRadius: '4px',
+    position: "relative",
+    margin: "3px",
+    fontSize: "16px",
+    border: "2px dashed #cccccc",
+    borderRadius: "4px",
     padding: theme.spacing(1),
-    lineHeight: '30px',
-    color: '#666666',
-    background: 'rgba(255, 255, 255, 0.7)',
+    lineHeight: "30px",
+    color: "#666666",
+    background: "rgba(255, 255, 255, 0.7)"
   },
   tagSelected: {
-    border: '2px dashed #3b9de9;',
+    border: "2px dashed #3b9de9;"
   },
   deleteBtn: {
-    position: 'absolute',
-    top: '-1px',
-    right: '-1px',
-    width: '20px',
-    height: '20px',
-    cursor: 'pointer',
-    userDrag: 'none',
-    userSelect: 'none',
+    position: "absolute",
+    top: "-1px",
+    right: "-1px",
+    width: "20px",
+    height: "20px",
+    cursor: "pointer",
+    userDrag: "none",
+    userSelect: "none"
   },
   dragableBox: {
-    minHeight: '100px',
-    background: 'rgba(0, 0, 0, 0.05)',
-  },
+    minHeight: "100px",
+    background: "rgba(0, 0, 0, 0.05)"
+  }
 }));
 
-const ProfilePage = ({ location }) => {
+const Profile = () => {
   const classes = useStyles();
-  const { isLoading, profile } = useAuth();
-  const [user, loadingUser, errorUser] = useObject(
-    firebase.database().ref(`/users/${profile?.uid}`),
+  const { profile } = useAuth();
+  const [user] = useObject(
+    firebase.database().ref(`/users/${profile?.uid}`)
   );
-  const [tags, loadingTags, error] = useListVals(
-    firebase.database().ref(`/tags`),
+  const [tags] = useListVals(
+    firebase.database().ref(`/tags`)
   );
-  const [newTagName, setNewTagName] = useState('');
+  const [newTagName, setNewTagName] = useState("");
   const userData = user?.val();
 
   const userTags = userData?.tags || [];
 
   const leftTags = tags.filter(
-    tag => !userTags.some(userTag => userTag.uid === tag.uid),
+    tag => !userTags.some(userTag => userTag.uid === tag.uid)
   );
 
   const updateUserTags = tags => {
     const updates = {
-      [`/users/${profile?.uid}/tags`]: tags,
+      [`/users/${profile?.uid}/tags`]: tags
     };
     firebase
       .database()
@@ -93,27 +93,26 @@ const ProfilePage = ({ location }) => {
     let newPostKey = firebase
       .database()
       .ref()
-      .child('tags')
+      .child("tags")
       .push().key;
     const updates = {
       [`/tags/${newPostKey}`]: {
         uid: newId,
-        tagName: newTagName,
-      },
+        tagName: newTagName
+      }
     };
     firebase
       .database()
       .ref()
       .update(updates);
-    setNewTagName('');
+    setNewTagName("");
   };
 
   const setTagName = tagName => {
     setNewTagName(tagName.target.value);
   };
-
   return (
-    <Layout location={location}>
+    <React.Fragment>
       <SEO title="Page two" />
       <h1>Select your interests</h1>
       <Grid container spacing={3}>
@@ -123,7 +122,7 @@ const ProfilePage = ({ location }) => {
               className={classes.dragableBox}
               tags={leftTags}
               render={({ tag }) => (
-                <div className={classes.tag}>{tag.tagName}</div>
+                <div key={tag.uid}  className={classes.tag}>{tag.tagName}</div>
               )}
             />
             <Grid container justify="center" alignItems="flex-end">
@@ -158,9 +157,9 @@ const ProfilePage = ({ location }) => {
               className={classes.dragableBox}
               tags={userTags}
               render={({ tag }) => (
-                <div className={classes.tag + ' ' + classes.tagSelected}>
+                <div key={tag.uid} className={classes.tag + " " + classes.tagSelected}>
                   <RemoveIcon
-                    color={'secondary'}
+                    color={"secondary"}
                     className={classes.deleteBtn}
                     onClick={() => handleClickDelete(tag)}
                   />
@@ -174,8 +173,8 @@ const ProfilePage = ({ location }) => {
           </Paper>
         </Grid>
       </Grid>
-    </Layout>
+    </React.Fragment>
   );
 };
 
-export default ProfilePage;
+export default Profile;
