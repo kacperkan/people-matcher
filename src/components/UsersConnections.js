@@ -99,7 +99,7 @@ const generateRowsFromNodes = (node, edges, nodes) => {
 };
 
 const sortByNumOfConnections = (nodeA, nodeB) =>
-  nodeA.tags.length - nodeB.tags.length;
+  nodeB.tags.length - nodeA.tags.length;
 
 const UsersConnections = ({ selectedNodes, selectedEdges, nodes }) => {
   const classes = useStyles();
