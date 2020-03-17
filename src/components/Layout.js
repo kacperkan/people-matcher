@@ -18,10 +18,14 @@ function Copyright() {
     >
       {"Copyright © "}
       {new Date().getFullYear()}
-      {" Kemal Erdem."} Built with
+
+      <Link color="inherit" href="https://github.com/burnpiro">
+        {" @burnpiro."}
+      </Link>
+      Built with
       {` `}
-      <Link color="inherit" href="https://www.gatsbyjs.org">
-        Gatsby
+      <Link color="inherit" href="https://www.reactjs.org">
+        React
       </Link>
     </Typography>
   );
