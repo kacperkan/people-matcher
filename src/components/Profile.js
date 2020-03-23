@@ -88,7 +88,11 @@ const Profile = () => {
     updateUserTags(userTags.filter(item => item.uid !== tag.uid));
   };
 
-  const handleAddTag = () => {
+  const handleClickAdd = tag => {
+    updateUserTags([...userTags, tag]);
+  };
+
+  const handleAddNewTag = () => {
     const newId = uuidv4();
     let newPostKey = firebase
       .database()
@@ -122,7 +126,8 @@ const Profile = () => {
               className={classes.dragableBox}
               tags={leftTags}
               render={({ tag }) => (
-                <div key={tag.uid}  className={classes.tag}>{tag.tagName}</div>
+                <div key={tag.uid}
+                     onClick={() => handleClickAdd(tag)} className={classes.tag}>{tag.tagName}</div>
               )}
             />
             <Grid container justify="center" alignItems="flex-end">
@@ -142,7 +147,7 @@ const Profile = () => {
                   variant="contained"
                   color="primary"
                   disabled={newTagName.length < 1}
-                  onClick={handleAddTag}
+                  onClick={handleAddNewTag}
                   className={classes.button}
                 >
                   Add
