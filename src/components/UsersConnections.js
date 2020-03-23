@@ -10,6 +10,10 @@ import TableRow from '@material-ui/core/TableRow';
 import Chip from '@material-ui/core/Chip';
 import TableContainer from '@material-ui/core/TableContainer';
 import TablePagination from '@material-ui/core/TablePagination';
+import Typography from '@material-ui/core/Typography';
+import Avatar from '@material-ui/core/Avatar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,6 +28,19 @@ const useStyles = makeStyles(theme => ({
   },
   nameColumn: {
     width: '280px',
+  },
+  userAvatar: {
+    padding: theme.spacing(1),
+    display: "flex",
+    alignItems: "center"
+  },
+  userName: {
+    paddingLeft: "1rem",
+    fontWeight: "bold",
+    fontSize: theme.typography.fontSize * 1.3
+  },
+  title: {
+    paddingRight: "1rem",
   },
 }));
 
@@ -126,7 +143,19 @@ const UsersConnections = ({ selectedNodes, selectedEdges, nodes }) => {
     <Container className={classes.root}>
       <Paper>
         <TableContainer className={classes.container}>
-          <Table stickyHeader  size="small">
+          {selectedNodes.length > 0 &&
+            selectedNodes.map(nodeId => nodes.find(node => node.id === nodeId)).map(profile => (
+              <div className={classes.userAvatar} key={profile.id}>
+                <Typography variant="h6" color="inherit" className={classes.title}>
+                  Selected:
+                </Typography>
+                <Avatar alt={profile?.username} src={profile?.photoUrl} />
+                <span className={classes.userName}>
+                  {profile?.username + ' '}
+                </span>
+              </div>
+            ))}
+          <Table stickyHeader size="small">
             <TableHead>
               <TableRow>
                 <TableCell className={classes.connectionsColumn} align="center">
@@ -139,24 +168,26 @@ const UsersConnections = ({ selectedNodes, selectedEdges, nodes }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => (
-                <TableRow key={row.id}>
-                  <TableCell
-                    className={classes.connectionsColumn}
-                    align="center"
-                  >
-                    {row.tags.length}
-                  </TableCell>
-                  <TableCell className={classes.nameColumn} align="center">
-                    {row.name}
-                  </TableCell>
-                  <TableCell>
-                    {row.tags.map(tag => (
-                      <Chip key={tag.uid} label={tag.tagName} />
-                    ))}
-                  </TableCell>
-                </TableRow>
-              ))}
+              {rows
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map(row => (
+                  <TableRow key={row.id}>
+                    <TableCell
+                      className={classes.connectionsColumn}
+                      align="center"
+                    >
+                      {row.tags.length}
+                    </TableCell>
+                    <TableCell className={classes.nameColumn} align="center">
+                      {row.name}
+                    </TableCell>
+                    <TableCell>
+                      {row.tags.map(tag => (
+                        <Chip key={tag.uid} label={tag.tagName} />
+                      ))}
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
