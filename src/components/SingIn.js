@@ -75,7 +75,7 @@ const SignIn = () => {
               .set(user.email);
             firebase
               .database()
-              .ref(`/users/${user.uid}/photoURL`)
+              .ref(`/users/${user.uid}/photoUrl`)
               .set(user.photoURL);
           }
         });

@@ -55,7 +55,7 @@ const Network = () => {
             tags: userData[userKey].tags || [],
             shape: "circularImage",
             image:
-              userData[userKey].photoURL ||
+              userData[userKey].photoUrl ||
               "https://raw.githubusercontent.com/google/material-design-icons/master/social/2x_web/ic_person_outline_white_48dp.png",
             brokenImage:
               "https://raw.githubusercontent.com/google/material-design-icons/master/social/2x_web/ic_person_outline_white_48dp.png"
