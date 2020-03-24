@@ -52,31 +52,38 @@ const SignIn = () => {
         .once("value")
         .then(function(snapshot) {
           const userData = snapshot.val();
+          const userObject = user.displayName ? {
+            username: user.displayName,
+            email: user.email,
+            photoUrl: user.photoURL,
+            tags: []
+          } : {
+            username: user.displayName,
+            email: user.email,
+            photoUrl: user.photoURL,
+            wholeObject: user,
+            tags: []
+          };
           if (!userData) {
             //create new user
             firebase
               .database()
               .ref(`/users/${user.uid}`)
-              .set({
-                username: user.displayName,
-                email: user.email,
-                photoUrl: user.photoURL,
-                tags: []
-              });
+              .set(userObject);
           } else {
             //update existing use
             firebase
               .database()
               .ref(`/users/${user.uid}/username`)
-              .set(user.displayName);
+              .set(userObject.displayName);
             firebase
               .database()
               .ref(`/users/${user.uid}/email`)
-              .set(user.email);
+              .set(userObject.email);
             firebase
               .database()
               .ref(`/users/${user.uid}/photoUrl`)
-              .set(user.photoURL);
+              .set(userObject.photoUrl);
           }
         });
     });
