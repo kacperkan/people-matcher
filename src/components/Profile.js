@@ -53,6 +53,8 @@ const useStyles = makeStyles(theme => ({
   },
   dragableBox: {
     minHeight: '100px',
+    maxHeight: '60vh',
+    overflowY: 'scroll',
     background: 'rgba(0, 0, 0, 0.05)',
   },
   searchBox: {
