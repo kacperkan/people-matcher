@@ -14,7 +14,30 @@ const options = {
     size: 30
   },
   layout: {
-    hierarchical: false
+    randomSeed: 16,
+    improvedLayout:true,
+    clusterThreshold: 500,
+  },
+  physics: {
+    forceAtlas2Based: {
+      gravitationalConstant: -35,
+      springLength: 230,
+      springConstant: 0.01,
+      avoidOverlap: 1,
+      centralGravity: 0.001
+    },
+    hierarchicalRepulsion: {
+      springLength: 300,
+      avoidOverlap: 1,
+    },
+    maxVelocity: 146,
+    solver: "hierarchicalRepulsion",
+    timestep: 0.35,
+    stabilization: {
+      enabled: true,
+      iterations: 200,
+      updateInterval: 25
+    }
   },
   edges: {
     arrows: {
@@ -24,7 +47,7 @@ const options = {
     },
     scaling: {
       customScalingFunction: function(min, max, total, value) {
-        return value / total;
+        return value / (max + min + value);
       }
     },
     color: "#5B72FF"
