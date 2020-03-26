@@ -34,7 +34,7 @@ function Copyright() {
 const Layout = ({ children }) => {
   const {isLoggedIn, isLoading} = useAuth();
   return (
-    <div style={{ maxHeight: "100vh", backgroundColor: "#FFF" }}>
+    <div style={{ height: "100vh", backgroundColor: "#FFF" }}>
       {isLoading ? (
         <div
           style={{
@@ -54,11 +54,11 @@ const Layout = ({ children }) => {
           <div
             style={{
               margin: `0 auto`,
-              maxWidth: 960,
+              maxWidth: "calc(100vw - 56px)",
               position: "relative",
-              height: "calc(100vh - 48px)",
+              height: "100%",
               padding: `0px 1.0875rem 1.45rem`,
-              paddingTop: 100
+              paddingTop: 76
             }}
           >
             <main style={{ flex: 1 }}>

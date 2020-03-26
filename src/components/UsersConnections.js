@@ -121,7 +121,7 @@ const sortByNumOfConnections = (nodeA, nodeB) =>
 const UsersConnections = ({ selectedNodes, selectedEdges, nodes }) => {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(6);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -192,7 +192,7 @@ const UsersConnections = ({ selectedNodes, selectedEdges, nodes }) => {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[10]}
+          rowsPerPageOptions={[rowsPerPage]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}

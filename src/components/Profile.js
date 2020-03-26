@@ -35,6 +35,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1),
     lineHeight: '30px',
     color: '#666666',
+    cursor: 'pointer',
     background: 'rgba(255, 255, 255, 0.7)',
   },
   tagSelected: {
