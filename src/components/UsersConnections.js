@@ -22,6 +22,7 @@ const useStyles = makeStyles(theme => ({
     top: '64px',
     left: 0,
     width: '100%',
+    maxWidth: '100%',
   },
   connectionsColumn: {
     width: '140px',
@@ -121,7 +122,7 @@ const sortByNumOfConnections = (nodeA, nodeB) =>
 const UsersConnections = ({ selectedNodes, selectedEdges, nodes }) => {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(6);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

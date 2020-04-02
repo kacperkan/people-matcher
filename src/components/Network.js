@@ -20,22 +20,21 @@ const options = {
   },
   physics: {
     forceAtlas2Based: {
-      gravitationalConstant: -35,
-      springLength: 230,
-      springConstant: 0.01,
-      avoidOverlap: 1,
+      gravitationalConstant: -75,
+      springLength: 300,
+      springConstant: 0.03,
+      avoidOverlap: 5,
       centralGravity: 0.001
     },
     hierarchicalRepulsion: {
       springLength: 300,
-      avoidOverlap: 1,
     },
     maxVelocity: 146,
-    solver: "hierarchicalRepulsion",
+    solver: "forceAtlas2Based",
     timestep: 0.35,
     stabilization: {
       enabled: true,
-      iterations: 200,
+      iterations: 100,
       updateInterval: 25
     }
   },
@@ -47,12 +46,16 @@ const options = {
     },
     scaling: {
       customScalingFunction: function(min, max, total, value) {
-        return value / (max + min + value);
+        return value / (max + min);
       }
     },
     color: "#5B72FF"
   }
 };
+
+function isInNodes(edge, nodes) {
+  return nodes.some(node => node === edge.to || node === edge.from)
+}
 
 const Network = () => {
   const [data] = useObject(firebase.database().ref("/users"));
@@ -106,7 +109,8 @@ const Network = () => {
                 id: `${node.id}/${user.id}`,
                 from: node.id,
                 to: user.id,
-                value: connectionStrength
+                value: connectionStrength,
+                color: selectedNodes ? (isInNodes({from: node.id, to: user.id }, selectedNodes) ? "red" : "#5B72FF") : "#5B72FF"
               };
             });
           return [...acc, ...usersEdges.filter(edge => edge.value !== 0)];
