@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "a6e87c039ff917b91123d43d50d69841",
+    "revision": "72e8feabbd2407d41044d9a3495d8c52",
     "url": "/people-matcher/index.html"
   },
   {
-    "revision": "0038087ab7d5d546540c",
+    "revision": "d5442e62482e9582f1d6",
     "url": "/people-matcher/static/css/main.c732e76a.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/people-matcher/static/js/2.d19f40e8.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "0038087ab7d5d546540c",
-    "url": "/people-matcher/static/js/main.7dc39751.chunk.js"
+    "revision": "d5442e62482e9582f1d6",
+    "url": "/people-matcher/static/js/main.6c86f3b6.chunk.js"
   },
   {
     "revision": "e5ffe9796f96432070aa",
