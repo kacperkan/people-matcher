@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
@@ -12,7 +12,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
-import Toolbar from '@material-ui/core/Toolbar';
+import Divider from '@material-ui/core/Divider';
+import PersonBadge from './PersonBadge';
 import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles(theme => ({
@@ -32,16 +33,18 @@ const useStyles = makeStyles(theme => ({
   },
   userAvatar: {
     padding: theme.spacing(1),
-    display: "flex",
-    alignItems: "center"
+    display: 'flex',
+    alignItems: 'center',
+    overflowX: 'hidden',
   },
   userName: {
-    paddingLeft: "1rem",
-    fontWeight: "bold",
-    fontSize: theme.typography.fontSize * 1.3
+    paddingLeft: '1rem',
+    paddingRight: '1rem',
+    fontWeight: 'bold',
+    fontSize: theme.typography.fontSize * 1.3,
   },
   title: {
-    paddingRight: "1rem",
+    paddingRight: '1rem',
   },
 }));
 
@@ -122,7 +125,18 @@ const sortByNumOfConnections = (nodeA, nodeB) =>
 const UsersConnections = ({ selectedNodes, selectedEdges, nodes }) => {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
+  const [selectedPerson, setSelectedPerson] = React.useState(null);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  let rows =
+    selectedNodes.length > 0
+      ? generateRowsFromNodes(selectedNodes[0], selectedEdges, nodes)
+      : generateRowsFromEdges(selectedEdges, nodes);
+  rows.sort(sortByNumOfConnections);
+
+  useEffect(() => {
+    setSelectedPerson(null)
+  }, [selectedNodes]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -133,29 +147,44 @@ const UsersConnections = ({ selectedNodes, selectedEdges, nodes }) => {
     setPage(0);
   };
 
-  let rows =
-    selectedNodes.length > 0
-      ? generateRowsFromNodes(selectedNodes[0], selectedEdges, nodes)
-      : generateRowsFromEdges(selectedEdges, nodes);
+  const handlePersonSelect = user => {
+    setSelectedPerson(user);
+  };
 
-  rows.sort(sortByNumOfConnections);
 
   return (
     <Container className={classes.root}>
       <Paper>
         <TableContainer className={classes.container}>
           {selectedNodes.length > 0 &&
-            selectedNodes.map(nodeId => nodes.find(node => node.id === nodeId)).map(profile => (
-              <div className={classes.userAvatar} key={profile.id}>
-                <Typography variant="h6" color="inherit" className={classes.title}>
-                  Selected:
-                </Typography>
-                <Avatar alt={profile?.username} src={profile?.photoUrl} />
-                <span className={classes.userName}>
-                  {profile?.username + ' '}
-                </span>
-              </div>
-            ))}
+            selectedNodes
+              .map(nodeId => nodes.find(node => node.id === nodeId))
+              .map(profile => (
+                <div className={classes.userAvatar} key={profile.id}>
+                  <Typography
+                    variant="h6"
+                    color="inherit"
+                    className={classes.title}
+                  >
+                    Selected:
+                  </Typography>
+                  <Avatar alt={profile?.username} src={profile?.photoUrl} />
+                  <span className={classes.userName}>
+                    {profile?.username + ' '}
+                  </span>
+                  <Divider orientation="vertical" flexItem />
+                  {rows.slice(0, 10).map(row => (
+                    <PersonBadge
+                      key={row.id}
+                      row={row}
+                      users={nodes}
+                      edges={row.tags.length}
+                      selectedUser={selectedPerson}
+                      onSelect={handlePersonSelect}
+                    />
+                  ))}
+                </div>
+              ))}
           <Table stickyHeader size="small">
             <TableHead>
               <TableRow>
@@ -169,26 +198,48 @@ const UsersConnections = ({ selectedNodes, selectedEdges, nodes }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map(row => (
-                  <TableRow key={row.id}>
-                    <TableCell
-                      className={classes.connectionsColumn}
-                      align="center"
-                    >
-                      {row.tags.length}
-                    </TableCell>
-                    <TableCell className={classes.nameColumn} align="center">
-                      {row.name}
-                    </TableCell>
-                    <TableCell>
-                      {row.tags.map(tag => (
-                        <Chip key={tag.uid} label={tag.tagName} />
-                      ))}
-                    </TableCell>
-                  </TableRow>
-                ))}
+              {selectedPerson == null &&
+                rows
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map(row => (
+                    <TableRow key={row.id}>
+                      <TableCell
+                        className={classes.connectionsColumn}
+                        align="center"
+                      >
+                        {row.tags.length}
+                      </TableCell>
+                      <TableCell className={classes.nameColumn} align="center">
+                        {row.name}
+                      </TableCell>
+                      <TableCell>
+                        {row.tags.map(tag => (
+                          <Chip key={tag.uid} label={tag.tagName} />
+                        ))}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              {selectedPerson != null &&
+                rows
+                  .filter(row => row.id === selectedPerson.id)
+                  .map(row => (
+                    <TableRow key={row.id}>
+                      <TableCell
+                        className={classes.connectionsColumn}
+                        align="center"
+                      >
+                        {row.tags.length}
+                      </TableCell>
+                      <TableCell className={classes.nameColumn} align="center">
+                        {row.name}
+                      </TableCell>
+                      <TableCell>
+                        {row.tags.map(tag => (
+                          <Chip key={tag.uid} label={tag.tagName} />
+                        ))}
+                      </TableCell>
+                    </TableRow>
+                  ))}
             </TableBody>
           </Table>
         </TableContainer>
